@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Generación de servicios en red &#8212; Apuntes de Lenguajes de Marcas v1.3</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <link rel="top" title="Apuntes de Lenguajes de Marcas v1.3" href="../index.html" />
+    <link rel="next" title="Utilización de técnicas de programación segura" href="tema5.html" />
+    <link rel="prev" title="Programación de comunicaciones en red" href="tema3.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="generacion-de-servicios-en-red">
+<h1>Generación de servicios en red<a class="headerlink" href="#generacion-de-servicios-en-red" title="Enlazar permanentemente con este título">¶</a></h1>
+<div class="section" id="protocolos-estandar-de-comunicacion-en-red-a-nivel-de-aplicacion">
+<h2>Protocolos estándar de comunicación en red a nivel de aplicación<a class="headerlink" href="#protocolos-estandar-de-comunicacion-en-red-a-nivel-de-aplicacion" title="Enlazar permanentemente con este título">¶</a></h2>
+<div class="section" id="telnet">
+<h3>Telnet<a class="headerlink" href="#telnet" title="Enlazar permanentemente con este título">¶</a></h3>
+</div>
+<div class="section" id="ftp">
+<h3>FTP<a class="headerlink" href="#ftp" title="Enlazar permanentemente con este título">¶</a></h3>
+</div>
+<div class="section" id="http">
+<h3>HTTP<a class="headerlink" href="#http" title="Enlazar permanentemente con este título">¶</a></h3>
+</div>
+<div class="section" id="pop3">
+<h3>POP3<a class="headerlink" href="#pop3" title="Enlazar permanentemente con este título">¶</a></h3>
+</div>
+<div class="section" id="smtp">
+<h3>SMTP<a class="headerlink" href="#smtp" title="Enlazar permanentemente con este título">¶</a></h3>
+</div>
+</div>
+<div class="section" id="librerias-de-clases-y-componentes">
+<h2>Librerías de clases y componentes.<a class="headerlink" href="#librerias-de-clases-y-componentes" title="Enlazar permanentemente con este título">¶</a></h2>
+</div>
+<div class="section" id="utilizacion-de-objetos-predefinidos">
+<h2>Utilización de objetos predefinidos.<a class="headerlink" href="#utilizacion-de-objetos-predefinidos" title="Enlazar permanentemente con este título">¶</a></h2>
+</div>
+<div class="section" id="propiedades-de-los-objetos-predefinidos">
+<h2>Propiedades de los objetos predefinidos.<a class="headerlink" href="#propiedades-de-los-objetos-predefinidos" title="Enlazar permanentemente con este título">¶</a></h2>
+</div>
+<div class="section" id="metodos-y-eventos-de-los-objetos-predefinidos">
+<h2>Métodos y eventos de los objetos predefinidos.<a class="headerlink" href="#metodos-y-eventos-de-los-objetos-predefinidos" title="Enlazar permanentemente con este título">¶</a></h2>
+</div>
+<div class="section" id="establecimiento-y-finalizacion-de-conexiones">
+<h2>Establecimiento y finalización de conexiones.<a class="headerlink" href="#establecimiento-y-finalizacion-de-conexiones" title="Enlazar permanentemente con este título">¶</a></h2>
+</div>
+<div class="section" id="transmision-de-informacion">
+<h2>Transmisión de información.<a class="headerlink" href="#transmision-de-informacion" title="Enlazar permanentemente con este título">¶</a></h2>
+</div>
+<div class="section" id="programacion-de-aplicaciones-cliente">
+<h2>Programación de aplicaciones cliente.<a class="headerlink" href="#programacion-de-aplicaciones-cliente" title="Enlazar permanentemente con este título">¶</a></h2>
+</div>
+<div class="section" id="programacion-de-servidores">
+<h2>Programación de servidores.<a class="headerlink" href="#programacion-de-servidores" title="Enlazar permanentemente con este título">¶</a></h2>
+</div>
+<div class="section" id="implementacion-de-comunicaciones-simultaneas">
+<h2>Implementación de comunicaciones simultáneas.<a class="headerlink" href="#implementacion-de-comunicaciones-simultaneas" title="Enlazar permanentemente con este título">¶</a></h2>
+</div>
+<div class="section" id="documentacion">
+<h2>Documentación.<a class="headerlink" href="#documentacion" title="Enlazar permanentemente con este título">¶</a></h2>
+</div>
+<div class="section" id="depuracion">
+<h2>Depuración.<a class="headerlink" href="#depuracion" title="Enlazar permanentemente con este título">¶</a></h2>
+</div>
+<div class="section" id="monitorizacion-de-tiempos-de-respuesta">
+<h2>Monitorización de tiempos de respuesta.<a class="headerlink" href="#monitorizacion-de-tiempos-de-respuesta" title="Enlazar permanentemente con este título">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Tabla de Contenidos</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Generación de servicios en red</a><ul>
+<li><a class="reference internal" href="#protocolos-estandar-de-comunicacion-en-red-a-nivel-de-aplicacion">Protocolos estándar de comunicación en red a nivel de aplicación</a><ul>
+<li><a class="reference internal" href="#telnet">Telnet</a></li>
+<li><a class="reference internal" href="#ftp">FTP</a></li>
+<li><a class="reference internal" href="#http">HTTP</a></li>
+<li><a class="reference internal" href="#pop3">POP3</a></li>
+<li><a class="reference internal" href="#smtp">SMTP</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#librerias-de-clases-y-componentes">Librerías de clases y componentes.</a></li>
+<li><a class="reference internal" href="#utilizacion-de-objetos-predefinidos">Utilización de objetos predefinidos.</a></li>
+<li><a class="reference internal" href="#propiedades-de-los-objetos-predefinidos">Propiedades de los objetos predefinidos.</a></li>
+<li><a class="reference internal" href="#metodos-y-eventos-de-los-objetos-predefinidos">Métodos y eventos de los objetos predefinidos.</a></li>
+<li><a class="reference internal" href="#establecimiento-y-finalizacion-de-conexiones">Establecimiento y finalización de conexiones.</a></li>
+<li><a class="reference internal" href="#transmision-de-informacion">Transmisión de información.</a></li>
+<li><a class="reference internal" href="#programacion-de-aplicaciones-cliente">Programación de aplicaciones cliente.</a></li>
+<li><a class="reference internal" href="#programacion-de-servidores">Programación de servidores.</a></li>
+<li><a class="reference internal" href="#implementacion-de-comunicaciones-simultaneas">Implementación de comunicaciones simultáneas.</a></li>
+<li><a class="reference internal" href="#documentacion">Documentación.</a></li>
+<li><a class="reference internal" href="#depuracion">Depuración.</a></li>
+<li><a class="reference internal" href="#monitorizacion-de-tiempos-de-respuesta">Monitorización de tiempos de respuesta.</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="tema3.html" title="capítulo anterior">Programación de comunicaciones en red</a></li>
+      <li>Next: <a href="tema5.html" title="próximo capítulo">Utilización de técnicas de programación segura</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>Esta página</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/textos/tema4.txt"
+            rel="nofollow">Mostrar el código</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Búsqueda rápida</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Ir a" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Oscar Gomez.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="../_sources/textos/tema4.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

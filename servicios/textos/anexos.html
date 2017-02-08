@@ -1,0 +1,601 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Anexos &#8212; Apuntes de Lenguajes de Marcas v1.3</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <link rel="top" title="Apuntes de Lenguajes de Marcas v1.3" href="../index.html" />
+    <link rel="prev" title="Utilización de técnicas de programación segura" href="tema5.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="anexos">
+<h1>Anexos<a class="headerlink" href="#anexos" title="Enlazar permanentemente con este título">¶</a></h1>
+<div class="section" id="la-clase-utilidadesficheros">
+<h2>La clase <code class="docutils literal"><span class="pre">UtilidadesFicheros</span></code><a class="headerlink" href="#la-clase-utilidadesficheros" title="Enlazar permanentemente con este título">¶</a></h2>
+<p>A continuación se muestra el código completo de la clase <code class="docutils literal"><span class="pre">UtilidadesFicheros</span></code>:</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">UtilidadesFicheros</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">BufferedReader</span> <span class="nf">getBufferedReader</span><span class="o">(</span>
+        <span class="n">String</span> <span class="n">nombreFichero</span><span class="o">)</span> <span class="kd">throws</span>
+    <span class="n">FileNotFoundException</span> <span class="o">{</span>
+        <span class="n">FileReader</span> <span class="n">lector</span><span class="o">;</span>
+        <span class="n">lector</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileReader</span><span class="o">(</span><span class="n">nombreFichero</span><span class="o">);</span>
+        <span class="n">BufferedReader</span> <span class="n">bufferedReader</span><span class="o">;</span>
+        <span class="n">bufferedReader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="n">lector</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">bufferedReader</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">PrintWriter</span> <span class="nf">getPrintWriter</span><span class="o">(</span>
+        <span class="n">String</span> <span class="n">nombreFichero</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+        <span class="n">PrintWriter</span> <span class="n">printWriter</span><span class="o">;</span>
+        <span class="n">FileWriter</span> <span class="n">fileWriter</span><span class="o">;</span>
+        <span class="n">fileWriter</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileWriter</span><span class="o">(</span><span class="n">nombreFichero</span><span class="o">);</span>
+        <span class="n">printWriter</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span><span class="n">fileWriter</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">printWriter</span><span class="o">;</span>
+        <span class="c1">//Fin de getPrintWriter</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">getLineasFichero</span><span class="o">(</span>
+        <span class="n">String</span> <span class="n">nombreFichero</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+        <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">lineas</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;();</span>
+        <span class="n">BufferedReader</span> <span class="n">bfr</span> <span class="o">=</span> <span class="n">getBufferedReader</span><span class="o">(</span><span class="n">nombreFichero</span><span class="o">);</span>
+        <span class="c1">//Leemos líneas del fichero...</span>
+        <span class="n">String</span> <span class="n">linea</span> <span class="o">=</span> <span class="n">bfr</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">linea</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">//Y las añadimos al array</span>
+            <span class="n">lineas</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">linea</span><span class="o">);</span>
+            <span class="n">linea</span> <span class="o">=</span> <span class="n">bfr</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="c1">//Fin del bucle que lee líneas</span>
+        <span class="k">return</span> <span class="n">lineas</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="c1">//Fin de getLineasFichero</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">long</span> <span class="nf">getSuma</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span>
+                               <span class="n">listaNombresFichero</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">long</span> <span class="n">suma</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">lineas</span><span class="o">;</span>
+        <span class="n">String</span> <span class="n">lineaCantidad</span><span class="o">;</span>
+        <span class="kt">long</span> <span class="n">cantidad</span><span class="o">;</span>
+        <span class="k">for</span> <span class="o">(</span><span class="n">String</span> <span class="n">nombreFichero</span> <span class="o">:</span> <span class="n">listaNombresFichero</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="c1">//Recuperamos todas las lineas</span>
+                <span class="n">lineas</span> <span class="o">=</span> <span class="n">getLineasFichero</span><span class="o">(</span><span class="n">nombreFichero</span><span class="o">);</span>
+                <span class="c1">//Pero solo nos interesa la primera</span>
+                <span class="n">lineaCantidad</span> <span class="o">=</span> <span class="n">lineas</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+                <span class="c1">//Convertimos la linea a número</span>
+                <span class="n">cantidad</span> <span class="o">=</span> <span class="n">Long</span><span class="o">.</span><span class="na">parseLong</span><span class="o">(</span><span class="n">lineaCantidad</span><span class="o">);</span>
+                <span class="c1">//Y se incrementa la suma total</span>
+                <span class="n">suma</span> <span class="o">=</span> <span class="n">suma</span> <span class="o">+</span> <span class="n">cantidad</span><span class="o">;</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">err</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Fallo al procesar el fichero &quot;</span>
+                                   <span class="o">+</span> <span class="n">nombreFichero</span><span class="o">);</span>
+                <span class="c1">//Fin del catch</span>
+            <span class="o">}</span>
+            <span class="c1">//Fin del for que recorre los nombres de fichero</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">suma</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="solucion-al-problema-del-simulador-de-casino">
+<h2>Solución al problema del simulador de Casino<a class="headerlink" href="#solucion-al-problema-del-simulador-de-casino" title="Enlazar permanentemente con este título">¶</a></h2>
+<p>Se ha optado por un diseño muy simple y con un acoplamiento muy alto. En pocas palabras hay solo dos clases:</p>
+<ol class="arabic simple">
+<li>La clase <code class="docutils literal"><span class="pre">Banca</span></code>: ejecuta toda la simulación y acepta apuestas de jugadores. La banca crea los Jugadores (que serán hilos), y luego pasará a ejecutar la simulación, que puede pasar por diversos estados. Algunos métodos de la banca deben ser <code class="docutils literal"><span class="pre">synchronized</span></code>, ya que todos los hilos Jugador tienen una referencia a la clase <code class="docutils literal"><span class="pre">Banca</span></code> y por lo tanto <strong>puede haber varios hilos intentando entrar en un cierto método</strong>.</li>
+<li>La clase <code class="docutils literal"><span class="pre">Jugador</span></code>: no necesita métodos <code class="docutils literal"><span class="pre">synchronized</span></code>, ya que cada <code class="docutils literal"><span class="pre">Jugador</span></code> accede solo a su propia información. <em>Sin embargo, si hubiese más de una banca (quizá porque un Jugador jugase a varias ruletas a la vez) la situación sería muy distinta</em>.</li>
+<li>En realidad, la clase <code class="docutils literal"><span class="pre">Jugador</span></code> es solo una base para poder crear distintos tipos de Jugador que siguen distintas estrategias.</li>
+</ol>
+<p>En las secciones siguientes se ilustra el código de las distintas clases.</p>
+<div class="section" id="la-clase-banca">
+<h3>La clase Banca<a class="headerlink" href="#la-clase-banca" title="Enlazar permanentemente con este título">¶</a></h3>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Banca</span> <span class="o">{</span>
+
+    <span class="kd">protected</span> <span class="kt">long</span> <span class="n">saldo</span><span class="o">;</span>
+
+    <span class="kd">protected</span> <span class="kt">boolean</span> <span class="n">enBancarrota</span><span class="o">;</span>
+
+    <span class="kd">protected</span> <span class="n">Random</span> <span class="n">generador</span><span class="o">;</span>
+
+    <span class="kd">protected</span> <span class="kt">boolean</span> <span class="n">sePuedenHacerApuestas</span><span class="o">;</span>
+
+    <span class="kd">protected</span> <span class="kt">int</span> <span class="n">numeroGanador</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kd">enum</span> <span class="n">Estado</span> <span class="o">{</span>
+
+        <span class="n">INICIO</span><span class="o">,</span> <span class="n">ACEPTANDO_APUESTAS</span><span class="o">,</span> <span class="n">RULETA_GIRANDO</span><span class="o">,</span> <span class="n">PAGANDO_APUESTAS</span><span class="o">,</span> <span class="n">EN_BANCARROTA</span>
+    <span class="o">}</span>
+
+    <span class="o">;</span>
+
+    <span class="kd">private</span> <span class="n">Estado</span> <span class="n">estadoRuleta</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Jugador</span><span class="o">&gt;</span> <span class="n">apostadores</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">Banca</span><span class="o">(</span><span class="kt">long</span> <span class="n">saldoInicial</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">saldo</span> <span class="o">=</span> <span class="n">saldoInicial</span><span class="o">;</span>
+        <span class="n">enBancarrota</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="n">estadoRuleta</span> <span class="o">=</span> <span class="n">Estado</span><span class="o">.</span><span class="na">INICIO</span><span class="o">;</span>
+        <span class="n">generador</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">();</span>
+        <span class="n">apostadores</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Jugador</span><span class="o">&gt;();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">synchronized</span> <span class="kt">boolean</span> <span class="nf">enBancarrota</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">enBancarrota</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">sumarSaldo</span><span class="o">(</span>
+        <span class="kt">long</span> <span class="n">cantidad</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">saldo</span> <span class="o">=</span> <span class="n">saldo</span> <span class="o">+</span> <span class="n">cantidad</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">restarSaldo</span><span class="o">(</span>
+        <span class="kt">long</span> <span class="n">cantidad</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">saldo</span> <span class="o">-</span> <span class="n">cantidad</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">saldo</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+            <span class="n">estadoRuleta</span> <span class="o">=</span> <span class="n">Estado</span><span class="o">.</span><span class="na">EN_BANCARROTA</span><span class="o">;</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">saldo</span> <span class="o">=</span> <span class="n">saldo</span> <span class="o">-</span> <span class="n">cantidad</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">aceptarApuesta</span><span class="o">(</span>
+        <span class="n">Jugador</span> <span class="n">jugador</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">estadoRuleta</span> <span class="o">==</span> <span class="n">Estado</span><span class="o">.</span><span class="na">ACEPTANDO_APUESTAS</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">apostadores</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">jugador</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">synchronized</span> <span class="kt">boolean</span> <span class="nf">aceptaApuestas</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">estadoRuleta</span> <span class="o">==</span> <span class="n">Estado</span><span class="o">.</span><span class="na">ACEPTANDO_APUESTAS</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">comunicarNumeroGanador</span><span class="o">(</span><span class="kt">int</span> <span class="n">numero</span><span class="o">)</span> <span class="o">{</span>
+        <span class="cm">/* Al pasar el número a los jugadores, ellos nos</span>
+<span class="cm">         * irán restando el saldo que les corresponda por haber ganado */</span>
+        <span class="kt">int</span> <span class="n">numApostadores</span> <span class="o">=</span> <span class="n">apostadores</span><span class="o">.</span><span class="na">size</span><span class="o">();</span>
+        <span class="k">for</span> <span class="o">(</span><span class="n">Jugador</span> <span class="n">apostador</span> <span class="o">:</span> <span class="n">apostadores</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">apostador</span><span class="o">.</span><span class="na">comunicarNumero</span><span class="o">(</span><span class="n">numeroGanador</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="cm">/* Una vez comunicadas todas las apuestas, borramos</span>
+<span class="cm">         * el vector. La partida va a volver a empezar */</span>
+        <span class="n">apostadores</span><span class="o">.</span><span class="na">clear</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">girarRuleta</span><span class="o">()</span> <span class="kd">throws</span>
+    <span class="n">InterruptedException</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">segundosAzar</span><span class="o">;</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;�Empieza el juego!&quot;</span><span class="o">);</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">estadoRuleta</span> <span class="o">!=</span> <span class="n">Estado</span><span class="o">.</span><span class="na">EN_BANCARROTA</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">estadoRuleta</span> <span class="o">=</span> <span class="n">Estado</span><span class="o">.</span><span class="na">ACEPTANDO_APUESTAS</span><span class="o">;</span>
+            <span class="cm">/* Se eligen unos milisegundos al azar para que los jugadores</span>
+<span class="cm">             * elijan, aunque quizá no todos puedan llegar a apostar</span>
+<span class="cm">             */</span>
+            <span class="n">segundosAzar</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">generador</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Hagan juego, tienen Vds &quot;</span> <span class="o">+</span>
+            <span class="n">segundosAzar</span> <span class="o">+</span> <span class="s">&quot; segundos&quot;</span><span class="o">);</span>
+            <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1000</span> <span class="o">*</span> <span class="n">segundosAzar</span><span class="o">);</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Ya no va m�s, se�ores. �Girando!&quot;</span><span class="o">);</span>
+            <span class="n">estadoRuleta</span> <span class="o">=</span> <span class="n">Estado</span><span class="o">.</span><span class="na">RULETA_GIRANDO</span><span class="o">;</span>
+            <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">3000</span><span class="o">);</span>
+            <span class="n">numeroGanador</span> <span class="o">=</span> <span class="n">generador</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">37</span><span class="o">);</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;El n�mero ganador es el :&quot;</span> <span class="o">+</span>
+            <span class="n">numeroGanador</span><span class="o">);</span>
+            <span class="n">estadoRuleta</span> <span class="o">=</span> <span class="n">Estado</span><span class="o">.</span><span class="na">PAGANDO_APUESTAS</span><span class="o">;</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">comunicarNumeroGanador</span><span class="o">(</span><span class="n">numeroGanador</span><span class="o">);</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;El saldo de la banca es ahora:&quot;</span>
+            <span class="o">+</span> <span class="n">saldo</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">simular</span><span class="o">(</span><span class="kt">int</span> <span class="n">jugadoresPar</span><span class="o">,</span>
+                        <span class="kt">int</span> <span class="n">jugadoresMartingala</span><span class="o">,</span>
+                        <span class="kt">int</span> <span class="n">jugadoresClasicos</span><span class="o">)</span> <span class="kd">throws</span>
+    <span class="n">InterruptedException</span> <span class="o">{</span>
+        <span class="n">Thread</span><span class="o">[]</span> <span class="n">hilosJugadoresPares</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">[</span><span class="n">jugadoresPar</span><span class="o">];</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">jugadoresPar</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">JugadorParImpar</span> <span class="n">jugador</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JugadorParImpar</span><span class="o">(</span>
+                <span class="mi">1000</span><span class="o">,</span> <span class="k">this</span><span class="o">);</span>
+            <span class="n">hilosJugadoresPares</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">jugador</span><span class="o">);</span>
+            <span class="n">hilosJugadoresPares</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">setName</span><span class="o">(</span><span class="s">&quot;Apostador par/impar &quot;</span>
+            <span class="o">+</span> <span class="n">i</span><span class="o">);</span>
+            <span class="n">hilosJugadoresPares</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">start</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="n">Thread</span><span class="o">[]</span> <span class="n">hilosJugadoresMartingala</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">[</span><span class="n">jugadoresMartingala</span><span class="o">];</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">jugadoresMartingala</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">JugadorMartingala</span> <span class="n">jugador</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JugadorMartingala</span><span class="o">(</span>
+                <span class="mi">1000</span><span class="o">,</span> <span class="k">this</span><span class="o">);</span>
+            <span class="n">hilosJugadoresMartingala</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">jugador</span><span class="o">);</span>
+            <span class="n">hilosJugadoresMartingala</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">setName</span><span class="o">(</span><span class="s">&quot;Apostador martingala &quot;</span>
+            <span class="o">+</span> <span class="n">i</span><span class="o">);</span>
+            <span class="n">hilosJugadoresMartingala</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">start</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="n">Thread</span><span class="o">[]</span> <span class="n">hilosJugadoresClasico</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">[</span><span class="n">jugadoresClasicos</span><span class="o">];</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">jugadoresClasicos</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">JugadorClasico</span> <span class="n">jugador</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JugadorClasico</span><span class="o">(</span><span class="mi">1000</span><span class="o">,</span>
+            <span class="k">this</span><span class="o">);</span>
+            <span class="n">hilosJugadoresClasico</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">jugador</span><span class="o">);</span>
+            <span class="n">hilosJugadoresClasico</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">setName</span><span class="o">(</span><span class="s">&quot;Apostador clasico &quot;</span>
+            <span class="o">+</span> <span class="n">i</span><span class="o">);</span>
+            <span class="n">hilosJugadoresClasico</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">start</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">girarRuleta</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span>
+    <span class="n">InterruptedException</span> <span class="o">{</span>
+        <span class="n">Banca</span> <span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Banca</span><span class="o">(</span><span class="mi">50000</span><span class="o">);</span>
+        <span class="n">b</span><span class="o">.</span><span class="na">simular</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="mi">5</span><span class="o">,</span> <span class="mi">5</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="la-clase-jugador">
+<h3>La clase Jugador<a class="headerlink" href="#la-clase-jugador" title="Enlazar permanentemente con este título">¶</a></h3>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Jugador</span> <span class="kd">implements</span>
+        <span class="n">Runnable</span> <span class="o">{</span>
+
+    <span class="kd">protected</span> <span class="kt">long</span> <span class="n">saldo</span><span class="o">;</span>
+
+    <span class="kd">protected</span> <span class="kt">boolean</span> <span class="n">enBancarrota</span><span class="o">;</span>
+
+    <span class="kd">protected</span> <span class="kt">long</span> <span class="n">cantidadApostada</span><span class="o">;</span>
+
+    <span class="kd">protected</span> <span class="kt">boolean</span> <span class="n">apuestaRealizada</span><span class="o">;</span>
+
+    <span class="kd">protected</span> <span class="n">Banca</span> <span class="n">banca</span><span class="o">;</span>
+
+    <span class="kd">protected</span> <span class="n">String</span> <span class="n">nombreHilo</span><span class="o">;</span>
+
+    <span class="kd">protected</span> <span class="n">Random</span> <span class="n">generador</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">Jugador</span><span class="o">(</span><span class="kt">long</span> <span class="n">saldoInicial</span><span class="o">,</span> <span class="n">Banca</span> <span class="n">b</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">saldo</span> <span class="o">=</span> <span class="n">saldoInicial</span><span class="o">;</span>
+        <span class="n">banca</span> <span class="o">=</span> <span class="n">b</span><span class="o">;</span>
+        <span class="n">apuestaRealizada</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="n">generador</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">sumarSaldo</span><span class="o">(</span><span class="kt">long</span> <span class="n">cantidad</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">saldo</span> <span class="o">=</span> <span class="n">saldo</span> <span class="o">+</span> <span class="n">cantidad</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">restarSaldo</span><span class="o">(</span><span class="kt">long</span> <span class="n">cantidad</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">saldo</span> <span class="o">-</span> <span class="n">cantidad</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">saldo</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+            <span class="n">enBancarrota</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">saldo</span> <span class="o">=</span> <span class="n">saldo</span> <span class="o">-</span> <span class="n">cantidad</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">enBancarrota</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">enBancarrota</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="cm">/* Lo usa la banca para comunicarnos el número*/</span>
+    <span class="kd">public</span> <span class="kd">abstract</span> <span class="kt">void</span> <span class="nf">comunicarNumero</span><span class="o">(</span><span class="kt">int</span> <span class="n">numero</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">abstract</span> <span class="kt">void</span> <span class="nf">hacerApuesta</span><span class="o">();</span>
+
+    <span class="cm">/* Todos los jugadores hacen lo mismo:</span>
+<span class="cm">     * Mientras no estemos en bancarrota ni la</span>
+<span class="cm">     * banca tampoco, hacemos apuestas. La banca</span>
+<span class="cm">     * nos dirá el número que haya salido y en</span>
+<span class="cm">     * ese momento (y si procede) incrementaremos</span>
+<span class="cm">     * nuestro saldo</span>
+<span class="cm">     */</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">nombreHilo</span> <span class="o">=</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">();</span>
+        <span class="k">while</span> <span class="o">((!</span><span class="n">enBancarrota</span><span class="o">)</span>
+                <span class="o">&amp;&amp;</span> <span class="o">(!</span><span class="n">banca</span><span class="o">.</span><span class="na">enBancarrota</span><span class="o">()))</span> <span class="o">{</span>
+            <span class="kt">int</span> <span class="n">msAzar</span><span class="o">;</span>
+            <span class="cm">/* Mientras la ruleta no acepte apuestas, dormimos un</span>
+<span class="cm">             * periodo al azar */</span>
+            <span class="k">while</span> <span class="o">(!</span><span class="n">banca</span><span class="o">.</span><span class="na">aceptaApuestas</span><span class="o">())</span> <span class="o">{</span>
+                <span class="n">msAzar</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">generador</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">500</span><span class="o">);</span>
+                <span class="k">try</span> <span class="o">{</span>
+                    <span class="c1">//System.out.println(nombreHilo+&quot;:banca ocupada, durmiendo...&quot;);</span>
+                    <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">msAzar</span><span class="o">);</span>
+                <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="k">return</span><span class="o">;</span>
+                <span class="o">}</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">banca</span><span class="o">.</span><span class="na">enBancarrota</span><span class="o">())</span> <span class="o">{</span>
+                    <span class="k">return</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+            <span class="n">hacerApuesta</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="n">String</span> <span class="n">nombre</span> <span class="o">=</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">();</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">enBancarrota</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">nombre</span> <span class="o">+</span>
+                               <span class="s">&quot;: ¡¡Me arruiné!!&quot;</span><span class="o">);</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">banca</span><span class="o">.</span><span class="na">enBancarrota</span><span class="o">())</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">nombre</span> <span class="o">+</span>
+                               <span class="s">&quot; hizo saltar la banca&quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="la-clase-jugadorclasico">
+<h3>La clase JugadorClasico<a class="headerlink" href="#la-clase-jugadorclasico" title="Enlazar permanentemente con este título">¶</a></h3>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">JugadorClasico</span> <span class="kd">extends</span> <span class="n">Jugador</span> <span class="o">{</span>
+
+    <span class="kt">int</span> <span class="n">numeroElegido</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">JugadorClasico</span><span class="o">(</span><span class="kt">long</span> <span class="n">saldoInicial</span><span class="o">,</span>
+                          <span class="n">Banca</span> <span class="n">b</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">saldoInicial</span><span class="o">,</span> <span class="n">b</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">comunicarNumero</span><span class="o">(</span><span class="kt">int</span> <span class="n">numero</span><span class="o">)</span> <span class="o">{</span>
+        <span class="cm">/* No hace falta comprobar si el numero es</span>
+<span class="cm">         * 0, ya que este jugador no lo elige nunca */</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">numero</span> <span class="o">==</span> <span class="n">numeroElegido</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">nombreHilo</span> <span class="o">+</span>
+                               <span class="s">&quot;: �Gana 36 veces lo jugado, 360 euros&quot;</span><span class="o">);</span>
+            <span class="n">banca</span><span class="o">.</span><span class="na">restarSaldo</span><span class="o">(</span><span class="mi">360</span><span class="o">);</span>
+            <span class="n">sumarSaldo</span><span class="o">(</span><span class="mi">360</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">nombreHilo</span> <span class="o">+</span>
+                           <span class="s">&quot; queda con un saldo de &quot;</span> <span class="o">+</span> <span class="n">saldo</span><span class="o">);</span>
+        <span class="n">apuestaRealizada</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">hacerApuesta</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(!</span><span class="n">banca</span><span class="o">.</span><span class="na">aceptaApuestas</span><span class="o">())</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">apuestaRealizada</span><span class="o">)</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="cm">/* Elegimos del 1 al 36 (no se puede elegir el 0*/</span>
+        <span class="n">numeroElegido</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">generador</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">36</span><span class="o">);</span>
+        <span class="n">banca</span><span class="o">.</span><span class="na">sumarSaldo</span><span class="o">(</span><span class="mi">10</span><span class="o">);</span>
+        <span class="n">restarSaldo</span><span class="o">(</span><span class="mi">10</span><span class="o">);</span>
+        <span class="n">apuestaRealizada</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="n">banca</span><span class="o">.</span><span class="na">aceptarApuesta</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="la-clase-jugadorparimpar">
+<h3>La clase JugadorParImpar<a class="headerlink" href="#la-clase-jugadorparimpar" title="Enlazar permanentemente con este título">¶</a></h3>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">JugadorParImpar</span> <span class="kd">extends</span> <span class="n">Jugador</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="nf">JugadorParImpar</span><span class="o">(</span><span class="kt">long</span> <span class="n">saldoInicial</span><span class="o">,</span>
+                           <span class="n">Banca</span> <span class="n">b</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">saldoInicial</span><span class="o">,</span> <span class="n">b</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">protected</span> <span class="kt">boolean</span> <span class="n">jugamosAPares</span><span class="o">;</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">hacerApuesta</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(!</span><span class="n">banca</span><span class="o">.</span><span class="na">aceptaApuestas</span><span class="o">())</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">apuestaRealizada</span><span class="o">)</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="cm">/* Elegimos una apuesta...*/</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">generador</span><span class="o">.</span><span class="na">nextBoolean</span><span class="o">()</span> <span class="o">==</span> <span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">//System.out.println(nombreHilo+&quot; elige apostar a par&quot;);</span>
+            <span class="n">jugamosAPares</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="c1">//System.out.println(nombreHilo+&quot; elige apostar a impar&quot;);</span>
+            <span class="n">jugamosAPares</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">banca</span><span class="o">.</span><span class="na">sumarSaldo</span><span class="o">(</span><span class="mi">10</span><span class="o">);</span>
+        <span class="n">restarSaldo</span><span class="o">(</span><span class="mi">10</span><span class="o">);</span>
+        <span class="n">apuestaRealizada</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="cm">/* Y pedimos a la banca que nos la acepte*/</span>
+        <span class="n">banca</span><span class="o">.</span><span class="na">aceptarApuesta</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">esGanador</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span><span class="o">)</span> <span class="o">{</span>
+        <span class="cm">/* Este jugador necesita comprobar si ha salido el 0,</span>
+<span class="cm">         * aunque no lo elige nunca, ya que si hemos apostado</span>
+<span class="cm">         * Par podríamos pensar que hemos ganado cuando no es así */</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">num</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">((</span><span class="n">num</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="o">(</span><span class="n">jugamosAPares</span><span class="o">))</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="k">if</span> <span class="o">((</span><span class="n">num</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="o">(!</span><span class="n">jugamosAPares</span><span class="o">))</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="c1">//Fin del else externo</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="c1">//Fin de esGanador</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">comunicarNumero</span><span class="o">(</span><span class="kt">int</span> <span class="n">numero</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">esGanador</span><span class="o">(</span><span class="n">numero</span><span class="o">))</span> <span class="o">{</span>
+            <span class="cm">/*Ganamos y cogemos a la banca 20 euros*/</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">nombreHilo</span> <span class="o">+</span>
+                               <span class="s">&quot; gana 20 euros por acertar impar&quot;</span><span class="o">);</span>
+            <span class="n">banca</span><span class="o">.</span><span class="na">restarSaldo</span><span class="o">(</span><span class="mi">20</span><span class="o">);</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">sumarSaldo</span><span class="o">(</span><span class="mi">20</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">nombreHilo</span> <span class="o">+</span>
+                           <span class="s">&quot; se queda con un saldo de &quot;</span> <span class="o">+</span> <span class="n">saldo</span><span class="o">);</span>
+        <span class="cm">/* Sea como sea, al terminar indicamos que ya no tenemos</span>
+<span class="cm">         * una apuesta realizada. Es decir, permitirmos al</span>
+<span class="cm">         * jugador volver a apostar	 */</span>
+        <span class="n">apuestaRealizada</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="la-clase-jugadormartingala">
+<h3>La clase JugadorMartingala<a class="headerlink" href="#la-clase-jugadormartingala" title="Enlazar permanentemente con este título">¶</a></h3>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">JugadorMartingala</span> <span class="kd">extends</span> <span class="n">Jugador</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">cantidadAApostar</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">numeroElegido</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">JugadorMartingala</span><span class="o">(</span><span class="kt">long</span> <span class="n">saldoInicial</span><span class="o">,</span>
+                             <span class="n">Banca</span> <span class="n">b</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">saldoInicial</span><span class="o">,</span> <span class="n">b</span><span class="o">);</span>
+        <span class="n">cantidadAApostar</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">comunicarNumero</span><span class="o">(</span><span class="kt">int</span> <span class="n">numero</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">numero</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">nombreHilo</span> <span class="o">+</span> <span class="s">&quot; pierde &quot;</span> <span class="o">+</span>
+                               <span class="n">cantidadAApostar</span><span class="o">);</span>
+            <span class="n">cantidadAApostar</span> <span class="o">=</span> <span class="n">cantidadAApostar</span> <span class="o">*</span> <span class="mi">2</span><span class="o">;</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">numeroElegido</span> <span class="o">==</span> <span class="n">numero</span><span class="o">)</span> <span class="o">{</span>
+            <span class="kt">int</span> <span class="n">beneficios</span> <span class="o">=</span> <span class="n">cantidadAApostar</span> <span class="o">*</span> <span class="mi">36</span><span class="o">;</span>
+            <span class="n">banca</span><span class="o">.</span><span class="na">restarSaldo</span><span class="o">(</span><span class="n">beneficios</span><span class="o">);</span>
+            <span class="n">sumarSaldo</span><span class="o">(</span><span class="n">beneficios</span><span class="o">);</span>
+            <span class="n">cantidadAApostar</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">numeroElegido</span> <span class="o">!=</span> <span class="n">numero</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">//System.out.println(nombreHilo + &quot; pierde &quot;+cantidadAApostar);</span>
+            <span class="n">cantidadAApostar</span> <span class="o">=</span> <span class="n">cantidadAApostar</span> <span class="o">*</span> <span class="mi">2</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">nombreHilo</span> <span class="o">+</span>
+                           <span class="s">&quot; queda con un saldo de &quot;</span> <span class="o">+</span> <span class="n">saldo</span><span class="o">);</span>
+        <span class="n">apuestaRealizada</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">hacerApuesta</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(!</span><span class="n">banca</span><span class="o">.</span><span class="na">aceptaApuestas</span><span class="o">())</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">apuestaRealizada</span><span class="o">)</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="cm">/* Elegimos del 1 al 36 (no se puede elegir el 0*/</span>
+        <span class="n">numeroElegido</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">generador</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">36</span><span class="o">);</span>
+        <span class="n">banca</span><span class="o">.</span><span class="na">sumarSaldo</span><span class="o">(</span><span class="n">cantidadAApostar</span><span class="o">);</span>
+        <span class="n">restarSaldo</span><span class="o">(</span><span class="n">cantidadAApostar</span><span class="o">);</span>
+        <span class="n">apuestaRealizada</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="n">banca</span><span class="o">.</span><span class="na">aceptarApuesta</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Tabla de Contenidos</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Anexos</a><ul>
+<li><a class="reference internal" href="#la-clase-utilidadesficheros">La clase <code class="docutils literal"><span class="pre">UtilidadesFicheros</span></code></a></li>
+<li><a class="reference internal" href="#solucion-al-problema-del-simulador-de-casino">Solución al problema del simulador de Casino</a><ul>
+<li><a class="reference internal" href="#la-clase-banca">La clase Banca</a></li>
+<li><a class="reference internal" href="#la-clase-jugador">La clase Jugador</a></li>
+<li><a class="reference internal" href="#la-clase-jugadorclasico">La clase JugadorClasico</a></li>
+<li><a class="reference internal" href="#la-clase-jugadorparimpar">La clase JugadorParImpar</a></li>
+<li><a class="reference internal" href="#la-clase-jugadormartingala">La clase JugadorMartingala</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="tema5.html" title="capítulo anterior">Utilización de técnicas de programación segura</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>Esta página</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/textos/anexos.txt"
+            rel="nofollow">Mostrar el código</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Búsqueda rápida</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Ir a" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Oscar Gomez.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="../_sources/textos/anexos.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

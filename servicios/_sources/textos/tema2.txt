@@ -1,0 +1,1104 @@
+﻿Programación multihilo
+==========================
+
+Recursos compartidos por los hilos.
+----------------------------------------------------------------
+Cuando creamos varios objetos de una clase, puede ocurrir que varios hilos de ejecución accedan a un objeto. Es importante recordar que **todos los campos del objeto son compartidos entre todos los hilos**.
+
+Supongamos una clase como esta:
+
+.. code-block:: java
+
+	public class Empleado(){
+		int numHorasTrabajadas=0;
+		public void int incrementarHoras(){
+			numHorasTrabajadas++;
+		}
+	}
+
+
+Si varios hilos ejecutan sin querer el método ``incrementar`` en teoría debería ocurrir que el número se incrementase tantas veces como procesos. Sin embargo, **es muy probable que eso no ocurra**
+
+
+Estados de un hilo. Cambios de estado.
+--------------------------------------------------------------------------
+
+
+Aunque no lo vemos, un hilo cambia de estado: puede pasar de la nada a la ejecución. De la ejecución al estado "en espera". De ahí puede volver a estar en ejecución. De cualquier estado se puede pasar al estado "finalizado".
+
+El programador no necesita controlar esto, lo hace el sistema operativo. Sin embargo un programa multihilo mal hecho puede dar lugar problemas como los siguientes:
+
+* Interbloqueo. Se produce cuando las peticiones y las esperas se entrelazan de forma que ningún proceso puede avanzar.
+
+* Inanición. Ningún proceso consigue hacer ninguna tarea útil y por lo tanto hay que esperar a que el administrador del sistema detecte el interbloqueo y mate procesos (o hasta que alguien reinicie el equipo).
+
+Elementos relacionados con la programación de hilos. Librerías y clases.
+--------------------------------------------------------------------------
+
+Para crear programas multihilo en Java se pueden hacer dos cosas:
+
+1. Heredar de la clase Thread.
+2. Implementar la interfaz Runnable.
+
+Los documentos de Java aconsejan el segundo. Lo único que hay que hacer es algo como esto.
+
+.. code-block:: java
+
+
+	class EjecutorTareaCompleja implements Runnable{
+		private String nombre;
+		int numEjecucion;
+		public EjecutorTareaCompleja(String nombre){
+			this.nombre=nombre;
+		}
+		@Override
+		public void run() {
+			String cad;
+			while (numEjecucion<100){
+				for (double i=0; i<4999.99; i=i+0.04)
+				{
+					Math.sqrt(i);			
+				}
+				cad="Soy el hilo "+this.nombre;
+				cad+=" y mi valor de i es "+numEjecucion;
+				System.out.println(cad);
+				numEjecucion++;
+			}		
+		}
+		
+	}
+	public class LanzaHilos {
+
+		/**
+		 * @param args
+		 */
+		public static void main(String[] args) {
+			int NUM_HILOS=500;
+			EjecutorTareaCompleja op;
+			for (int i=0; i<NUM_HILOS; i++)
+			{
+				op=new EjecutorTareaCompleja ("Operacion "+i);
+				Thread hilo=new Thread(op);
+				hilo.start();
+			}
+		}
+	}
+
+
+
+.. WARNING::
+   Este código tiene un problema **muy grave** y es que no se controla el acceso a variables compartidas, es decir **HAY UNA SECCIÓN CRÍTICA QUE NO ESTÁ PROTEGIDA** por lo que el resultado de la ejecución no muestra ningún sentido aunque el programa esté bien.
+
+
+Gestión de hilos.
+--------------------------------------------------------------------------
+Con los hilos se pueden efectuar diversas operaciones que sean de utilidad al programador (y al administrador de sistemas a veces).
+
+Por ejemplo, un hilo puede tener un nombre. Si queremos asignar un nombre a un hilo podemos usar el método ``setName("Nombre que sea")``. También podemos obtener un objeto que represente el hilo de ejecución con ``currentThread`` que nos devolverá un objeto de la clase ``Thread``.
+
+Otra operación de utilidad al gestionar hilos es indicar la prioridad que queremos darle a un hilo. En realidad esta prioridad es indicativa, el sistema operativo no está obligado a respetarla aunque por lo general lo hacen. Se puede indicar la prioridad con ``setPriority(10)``. La máxima prioridad posible es ``MAX_PRIORITY``, y la mínima es ``MIN_PRIORITY``.
+
+Cuando lanzamos una operación también podemos usar el método ``Thread.sleep(numero)`` y poner nuestro hilo "a dormir".
+
+Cuando se trabaja con prioridades en hilos **no hay garantías de que un hilo termine cuando esperemos**.
+
+Podemos terminar un hilo de ejecución llamando al método ``join``. Este método devuelve el control al hilo principal que lanzó el hilo secundario con la posibilidad de elegir un tiempo de espera en milisegundos.
+
+El siguiente programa ilustra el uso de estos métodos:
+
+.. code-block:: java
+
+	class Calculador implements Runnable{
+		@Override
+		public void run() {
+			int num=0;
+			while(num<5){
+				System.out.println("Calculando...");
+				try {
+					long tiempo=(long) (1000*Math.random()*10);
+					if (tiempo>8000){
+						Thread hilo=Thread.currentThread();
+						System.out.println(
+								"Terminando hilo:"+
+										hilo.getName()
+						);
+						hilo.join();
+					}
+					Thread.sleep(tiempo);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				System.out.println("Calculado y reiniciando.");
+				num++;
+			}
+			Thread hilo=Thread.currentThread();
+			String miNombre=hilo.getName();
+			System.out.println("Hilo terminado:"+miNombre);	
+		}
+	}
+
+	public class LanzadorHilos {
+		public static void main(String[] args) {
+			Calculador vHilos[]=new Calculador[5];
+			for (int i=0; i<5;i++){
+				vHilos[i]=new Calculador();
+				Thread hilo=new Thread(vHilos[i]);
+				hilo.setName("Hilo "+i);
+				if (i==0){
+					hilo.setPriority(Thread.MAX_PRIORITY);
+				}
+				hilo.start();
+			}
+		}
+	}
+	
+Ejercicio: crear un programa que lance 10 hilos de ejecución donde a cada hilo se le pasará la base y la altura de un triángulo, y cada hilo ejecutará el cálculo del área de dicho triángulo informando de qué base y qué altura recibió y cual es el área resultado.
+
+Una posibilidad (quizá incorrecta) sería esta:
+
+Para implementar la clase ``CalculadorAreas``
+
+.. literalinclude:: ../listados/Clase_com_ies_CalculadorAreas.java
+   :language: java
+
+Para implementar la clase ``AreasEnParalelo`` que lanza los hilos para hacer muchos cálculos de áreas en paralelo usaremos esto:
+
+.. literalinclude:: ../listados/Clase_com_ies_AreasEnParalelo.java
+   :language: java
+
+
+.. code-block:: java
+
+	package com.ies;
+
+	import java.util.Random;
+
+	class CalculadorAreas implements Runnable{
+		int base, altura;
+		public CalculadorAreas(int base, int altura){
+			this.base=base;
+			this.altura=altura;
+		}
+		@Override
+		public void run() {
+			float area=this.base*this.altura/2;
+			System.out.print("Base:"+this.base);
+			System.out.print("Altura:"+this.altura);
+			System.out.println("Area:"+area);
+		}
+		
+	}
+	public class AreasEnParalelo {
+
+		public static void main(String[] args) {
+			Random generador=new Random();
+			int numHilos=10000;
+			int baseMaxima=3;
+			int alturaMaxima=5;
+			for (int i=0; i<numHilos; i++){
+				//Sumamos 1 para evitar casos como base=0
+				int base=1+generador.nextInt(baseMaxima);
+				int altura=1+generador.nextInt(alturaMaxima);
+				CalculadorAreas ca=
+						new CalculadorAreas(base, altura);
+				Thread hiloAsociado=new Thread(ca);
+				hiloAsociado.start();
+			}
+		}
+	}
+	
+Las secciones siguientes sirven como resumen de como crear una aplicación multihilo
+
+
+Creación, inicio y finalización.
+--------------------------------------------------------------------------
+
+* Podemos heredar de Thread o implementar ``Runnable``. Usaremos el segundo recordando implementar el método ``public void run()``.
+
+* Para crear un hilo asociado a un objeto usaremos algo como:
+
+.. code-block:: java
+
+	Thread hilo=new Thread(objetoDeClase)
+	
+Lo más habitual es guardar en un vector todos los hilos que hagan algo, y no en un objeto suelto.
+
+* Cada objeto que tenga un hilo asociado debe iniciarse así:
+
+.. code-block:: java
+
+	hilo.start();
+	
+	
+* Todo programa multihilo tiene un "hilo principal", el cual deberá esperar a que terminen los hilos asociados ejecutando el método ``join()``	.
+
+
+Sincronización de hilos.
+--------------------------------------------------------------------------
+
+Cuando un método acceda a una variable miembro que esté compartida deberemos proteger dicha sección crítica, usando ``synchronized``. Se puede poner todo el método ``synchronized`` o marcar un trozo de código más pequeño.
+
+Información entre hilos.
+------------------------------------------------------------------------
+
+Todos los hilos comparten todo, así que obtener información es tan sencillo como consultar un miembro.
+En realidad podemos comunicar los hilos con otro mecanismo llamado ``sockets de red``, pero se ve en el tema siguiente.
+
+
+
+Prioridades de los hilos.
+--------------------------------------------------------------------------
+
+Podemos asignar distintas prioridades a los hilos usando los campos estáticos ``MAX_PRIORITY`` y ``MIN_PRIORITY``. Usando valores entre estas dos constantes podemos hacer que un hilo reciba más procesador que otro (se hace en contadas ocasiones).
+
+Para ello se usa el método ``setPriority(valor)``
+
+
+Gestión de prioridades.
+--------------------------------------------------------------------------
+
+En realidad un sistema operativo no está obligado a respetar las prioridades, sino que se lo tomará como "recomendaciones". En general hasta ahora todos respetan hasta cierto punto las prioridades que pone el programador pero no debe tomarse como algo absoluto.
+
+
+
+
+Programación de aplicaciones multihilo.
+--------------------------------------------------------------------------
+
+La estructura típica de un programa multihilo es esta:
+
+.. code-block:: java
+
+	class TareaCompleja implements Runnable{
+		@Override
+		public void run() {
+			for (int i=0; i<100;i++){
+				int a=i*3;
+			}
+			Thread hiloActual=Thread.currentThread();
+			String miNombre=hiloActual.getName();
+			System.out.println(
+					"Finalizado el hilo"+miNombre);
+		}
+	}
+	public class LanzadorHilos {
+		public static void main(String[] args) {
+			int NUM_HILOS=100;
+			Thread[] hilosAsociados;
+			
+			hilosAsociados=new Thread[NUM_HILOS];
+			for (int i=0;i<NUM_HILOS;i++){
+				TareaCompleja t=new TareaCompleja();
+				Thread hilo=new Thread(t);
+				hilo.setName("Hilo: "+i);
+				hilo.start();
+				hilosAsociados[i]=hilo;
+			}
+			
+			/* Despues de crear todo, nos aseguramos
+			 * de esperar que todos los hilos acaben. */
+			
+			for (int i=0; i<NUM_HILOS; i++){
+				Thread hilo=hilosAsociados[i];
+				try {
+					//Espera a que el hilo acabe
+					hilo.join();
+				} catch (InterruptedException e) {
+					System.out.print("Algun hilo acabó ");
+					System.out.println(" antes de tiempo!");
+				}
+			}
+			System.out.println("El principal ha terminado");
+		}
+	}
+	
+Supongamos que la tarea es más compleja y que el bucle se ejecuta un número al azar de veces. Esto significaría que nuestro bucle es algo como esto:
+
+.. code-block:: java
+
+		Random generador= new Random();
+		int numAzar=(1+generador.nextInt(5))*100;
+		for (int i=0; i<numAzar;i++){
+			int a=i*3;
+		}	
+
+¿Como podríamos modificar el programa para que podamos saber cuantas multiplicaciones se han hecho en total entre todos los hilos?
+
+Aquí entra el problema de la sincronización. Supongamos una clase contador muy simple como esta:
+
+.. code-block:: java
+
+	class Contador{
+		int cuenta;
+		public Contador(){
+			cuenta=0;
+		}
+		public void incrementar(){
+			cuenta=cuenta+1;
+		}
+		public int getCuenta(){
+			return cuenta;
+		}
+	}
+	
+De esta forma podríamos construir un objeto contador y pasárselo a todos los hilos para que en ese único objeto se almacene el recuento final. El problema es que en la programación multihilo **SI EL OBJETO CONTADOR SE COMPARTE ENTRE VARIOS HILOS LA CUENTA FINAL RESULTANTE ES MUY POSIBLE QUE ESTÉ MAL**
+
+Esta clase debería tener protegidas sus secciones críticas
+
+.. code-block:: java
+
+	class Contador{
+		int cuenta;
+		public Contador(){
+			cuenta=0;
+		}
+		public synchronized void incrementar(){
+			cuenta=cuenta+1;
+		}
+		public synchronized int getCuenta(){
+			return cuenta;
+		}
+	}
+	
+Se puede aprovechar todavía más rendimiento si en un método marcamos como sección crítica (o sincronizada) exclusivamente el código peligroso:
+
+.. code-block:: java
+
+	public  void incrementar(){
+		System.out.println("Otras cosas");
+		synchronized(this){
+			cuenta=cuenta+1;
+		}
+		System.out.println("Mas cosas...");
+		synchronized(this){
+			if (cuenta>300){
+				System.out.println("Este hilo trabaja mucho");
+			}
+		}	
+	}
+
+Problema
+------------------------------------------------------
+
+En una mesa hay procesos que simulan el comportamiento de unos filósofos que intentan comer de un plato. Cada filósofo tiene un cubierto a su izquierda y uno a su derecha y para poder comer tiene que conseguir los dos. Si lo consigue, mostrará un mensaje en pantalla que indique "Filosofo 2 comiendo".
+
+Despues de comer, soltará los cubiertos y esperará al azar un tiempo entre 1000 y 5000 milisegundos, indicando por pantalla "El filósofo 2 está pensando".
+
+En general todos los objetos de la clase Filósofo está en un bucle infinito dedicándose a comer y a pensar.
+
+Simular este problema en un programa Java que muestre el progreso de todos sin caer en problemas de sincronización ni de inanición.
+
+.. figure:: ../imagenes/Filosofos.png
+   :figwidth: 50%
+   :align: center
+   
+   Esquema de los filósofos
+   
+   
+Boceto de solución
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: java
+
+	import java.util.Random;
+
+
+	public class Filosofo  implements Runnable{
+		public void run(){
+			String miNombre=Thread.currentThread().getName();
+			Random generador=new Random();
+			while (true){
+				/* Comer*/		
+				/* Intentar coger palillos*/
+				/* Si los coge:*/
+				System.out.println(miNombre+" comiendo...");
+				int milisegs=(1+generador.nextInt(5))*1000;
+				esperarTiempoAzar(miNombre, milisegs);
+				/* Pensando...*/
+				//Recordemos soltar los palillos
+				System.out.println(miNombre+"  pensando...");				milisegs=(1+generador.nextInt(5))*1000;
+				esperarTiempoAzar(miNombre, milisegs);
+			}
+		}
+
+	private void esperarTiempoAzar(String miNombre, int milisegs) {
+			try {
+				Thread.sleep(milisegs);
+			} catch (InterruptedException e) {
+				System.out.println(
+					miNombre+" interrumpido!!. Saliendo...");
+				return ;
+			}
+		}
+	}
+	
+   
+
+
+Solución completa al problema de los filósofos
+------------------------------------------------------
+
+Gestor de recursos compartidos (palillos)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. code-block:: java
+
+	public class GestorPalillos {
+		/* False significa que no están cogidos*/
+		private boolean[] palillos;
+		public GestorPalillos(int num_filosofos){
+			palillos=new boolean[num_filosofos];
+			for (int i=0;i<palillos.length;i++){
+				palillos[i]=false;
+			}
+		}
+		public synchronized boolean 
+			sePuedenCogerAmbosPalillos(
+				int num1,int num2){
+			if ( (palillos[num1]==false) &&
+				(palillos[num2]==false) ) {
+				palillos[num1]=true;
+				palillos[num2]=true;
+				System.out.println(
+					"Alguien consiguio los palillos "
+					+num1+" y "+num2);
+				return true;
+			}
+			return false;
+		}
+		public synchronized void soltarPalillos(int num1, int num2){
+			palillos[num1]=false;
+			palillos[num2]=false;
+			System.out.println(
+				"Alguien liberó los palillos "+
+				num1+" y "+num2);
+		}	
+	}
+	
+Simulación de un filósofo
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. code-block:: java
+
+			
+	import java.util.Random;
+	public class Filosofo  implements Runnable{
+		int num_palillo_izq;
+		int num_palillo_der;
+		GestorPalillos gestorPalillos;
+		public Filosofo(GestorPalillos gp,
+				int p_izq, int p_der){
+			this.gestorPalillos=gp;
+			this.num_palillo_der=p_der;
+			this.num_palillo_izq=p_izq;
+		}
+		public void run(){
+			String miNombre=Thread.currentThread().getName();
+			Random generador=new Random();
+			while (true){
+				/* Comer*/		
+				/* Intentar coger palillos*/
+				while(!gestorPalillos.sePuedenCogerAmbosPalillos
+					(
+							num_palillo_izq, 
+							num_palillo_der
+					))
+				{
+					
+				}
+				/* Si los coge:*/
+				
+				int milisegs=(1+generador.nextInt(5))*1000;
+				esperarTiempoAzar(miNombre, milisegs);
+				/* Pensando...*/
+				//Recordemos soltar los palillos
+				gestorPalillos.soltarPalillos(
+					num_palillo_izq, 
+					num_palillo_der);
+				
+				milisegs=(1+generador.nextInt(5))*1000;
+				esperarTiempoAzar(miNombre, milisegs);
+			}
+		}
+
+	private void esperarTiempoAzar(String miNombre, int milisegs) {
+			try {
+				Thread.sleep(milisegs);
+			} catch (InterruptedException e) {
+				System.out.println(
+					miNombre+
+					" interrumpido!!. Saliendo...");
+				return ;
+			}
+		}
+	}
+
+Lanzador de hilos
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. code-block:: java
+
+	public class LanzadorFilosofos {
+		public static void main(String[] args) {
+			int MAX_FILOSOFOS=5;
+			Filosofo[] filosofos=new Filosofo[MAX_FILOSOFOS];
+			Thread[] hilosAsociados=new Thread[MAX_FILOSOFOS];
+			GestorPalillos gestorCompartido=
+					new GestorPalillos(MAX_FILOSOFOS);
+			for (int i=0; i<MAX_FILOSOFOS; i++){
+				if (i==0){
+					filosofos[i]=
+					new Filosofo(
+							gestorCompartido,
+							i,MAX_FILOSOFOS-1);
+				}
+				else {
+					filosofos[i]=new Filosofo(
+							gestorCompartido, i, i-1);
+				}
+				Thread hilo=new Thread(filosofos[i]);
+				hilo.setName("Filosofo "+i);
+				hilosAsociados[i]=hilo;
+				hilo.start();
+			}
+			/* Un poco inútil*/
+			for (int i=0; i<MAX_FILOSOFOS;i++){
+				try {
+					hilosAsociados[i].join();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	
+Problema: simulador de casino
+-------------------------------
+
+Se desea simular los posibles beneficios de diversas estrategias de juego en un casino. La ruleta francesa es un juego en el que hay una ruleta con 37 números (del 0 al 36). Cada 3000 milisegundos el croupier saca un número al azar y los diversos hilos apuestan para ver si ganan. Todos los hilos empiezan con 1.000 euros y la banca (que controla la ruleta) con 50.000. Cuando los jugadores pierden dinero, la banca incrementa su saldo.
+
+
+
+* Se puede jugar a un número concreto. Habrá 4 hilos que eligen números al azar del 1 al 36 (no el 0) y restarán 10 euros de su saldo para apostar a ese ese número. Si sale su número su saldo se incrementa en 360 euros (36 veces lo apostado).
+
+* Se puede jugar a par/impar. Habrá 4 hilos que eligen al azar si apuestan a que saldrá un número par o un número impar. Siempre restan 10 euros para apostar y si ganan incrementan su saldo en 20 euros.
+
+* Se puede jugar a la "martingala". Habrá 4 hilos que eligen números al azar. Elegirán un número y empezarán restando 10 euros de su saldo para apostar a ese número. Si ganan incrementan su saldo en 360 euros. Si pierden jugarán el doble de su apuesta anterior (es decir, 20, luego 40, luego 80, y así sucesivamente)
+
+* La banca acepta todas las apuestas pero nunca paga más dinero del que tiene.
+
+* Si sale el 0, todo el mundo pierde y la banca se queda con todo el dinero.
+
+
+
+
+	
+	
+Problema
+------------------------------------------------------
+
+En una peluquería hay barberos y sillas para los clientes (siempre hay más sillas que clientes). Sin embargo, en esta peluquería no siempre hay trabajo por lo que los barberos duermen cuando no hay clientes a los que afeitar. Un cliente puede llegar a la barbería y encontrar alguna silla libre, en cuyo caso, el cliente se sienta y esperará que algún barbero le afeite. Puede ocurrir que el cliente llegue y no haya sillas libres, en cuyo caso se marcha. Simular el comportamiento de la barbería mediante un programa Java.
+
+.. figure:: ../imagenes/barberodormilon.png
+   :figwidth: 50%  
+   :align: center
+   
+   Los  barberos dormilones
+   
+Una (mala) solución al problema de los barberos
+--------------------------------------------------
+
+Prueba la siguiente solución:
+
+Clase Barbero
+~~~~~~~~~~~~~~~~
+
+.. code-block:: java
+
+	public class Barbero implements Runnable {
+		private String 				nombre;
+		private GestorConcurrencia 	gc;
+		private Random				generador;
+		private int					MAX_ESPERA_SEGS=5;
+		public Barbero(GestorConcurrencia gc,String nombre){
+			this.nombre		=nombre;
+			this.gc			=gc;
+			this.generador	=new Random();
+		}
+	
+		public void esperarTiempoAzar(int max){
+			/* Se calculan unos milisegundos al azar*/
+			int msgs=(1+generador.nextInt(max))*1000;
+			try {
+				Thread.currentThread().sleep(msgs);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		public void run(){
+			while (true){
+				int num_silla=gc.atenderAlgunCliente();
+				while (num_silla==-1){
+					/* Mientras no haya nadie a quien 
+					 * atender, dormimos
+					 */
+					esperarTiempoAzar(MAX_ESPERA_SEGS);
+					num_silla=gc.atenderAlgunCliente();
+				}
+				/* Si llegamos aqui es que había algún cliente
+				 * Simulamos un tiempo de afeitado
+				 */
+				esperarTiempoAzar(MAX_ESPERA_SEGS);
+				/* Tras ese tiempo de afeitado se
+				 * libera la silla
+				 */
+				gc.liberarSilla(num_silla);
+				/* Y vuelta a empezar*/
+			}
+		}
+	}
+
+Clase Cliente
+~~~~~~~~~~~~~~~
+
+.. code-block:: java
+
+	public class Cliente implements Runnable{
+		GestorConcurrencia 	gc;
+		public Cliente(GestorConcurrencia gc){
+			this.gc		=gc;
+		}
+		public void run(){
+			/* Los clientes no esperan que haya
+			 * sillas libres, no hay bucle infinito.
+			 * Si no hay sillas libres se van...
+			 */
+			gc.getSillaLibre();		
+		}
+	}
+
+Clase GestorConcurrencia
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: java
+
+	public class GestorConcurrencia {
+		/* Vector que indica cuantas sillas hay y
+		 * si están libres o no
+		 */
+		boolean[] sillasLibres;
+		/* Indica si el cliente sentado en esa
+		 * silla está atendido por un barbero o no
+		 */
+		boolean[] clienteEstaAtendido;
+	
+		public GestorConcurrencia(int numSillas){
+			/*Construimos los vectores...*/
+			sillasLibres		=new boolean[numSillas];
+			clienteEstaAtendido	=new boolean[numSillas];
+			/* ... los inicializamos*/
+			for (int i=0; i<numSillas;i++){
+				sillasLibres[i]			=true;
+				clienteEstaAtendido[i]	=false;
+			}
+		}
+	
+		/**
+		 * Permite obtener una silla libre, usado por la
+		 * clase Cliente para saber si puede sentarse
+		 * en algún sitio o irse
+		 * @return Devuelve el número de la primera silla
+		 * que está libre o -1 si no hay ninguna 
+		 */
+		public synchronized int getSillaLibre(){
+			for (int i=0; i<sillasLibres.length; i++){
+				/* Si está libre la silla ...*/
+				if (sillasLibres[i]) {
+					/* ...se marca como ocupada*/
+					sillasLibres[i]=false;
+					System.out.println(
+						"Cliente sentado en silla "+i
+							);
+					/*.. y devolvemos i...*/
+					return i;
+				}
+			}
+			/* Si llegamos aquí es que no había nada libre*/
+			return -1;
+		}
+	
+		/**
+		 * Nos dice qué silla tiene algun cliente
+		 * que no está atendido
+		 * @return un número de silla o -1 si no
+		 * hay clientes sin atender
+		 */
+		public synchronized int atenderAlgunCliente(){
+			for (int i=0; i<sillasLibres.length; i++){
+				/* Si una silla está ocupada (no libre, false)
+				 * y está marcado como "sin atender" (false)
+				 * entonces la marcamos como atendida
+				 */
+				if (clienteEstaAtendido[i]==false){
+					clienteEstaAtendido[i]=true;
+					System.out.println(
+							"Afeitando cliente en silla "+i);
+					return i;
+				}
+			}
+			return -1;
+		}
+	
+		/* El cliente de esa silla, se marcha, por lo
+		 * que se marca esa silla como "libre" 
+		 * y como "sin atender"
+		 */
+		public synchronized void liberarSilla(int i){
+			sillasLibres[i]			=true;
+			clienteEstaAtendido[i]	=false;
+			System.out.println(
+					"Se marcha el cliente de la silla "+i);
+		}
+	}
+
+Clase Lanzador
+~~~~~~~~~~~~~~~~
+
+.. code-block:: java
+
+	public class Lanzador {
+	
+		public static void main(String[] args) {
+		
+			int MAX_BARBEROS	=2;
+			int MAX_SILLAS		=MAX_BARBEROS+1;
+			int MAX_CLIENTES	=MAX_BARBEROS*10;
+			int MAX_ESPERA_SEGS	= 3;
+			GestorConcurrencia gc;
+			gc=new GestorConcurrencia(MAX_SILLAS);
+		
+			Thread[] vhBarberos	=new Thread[MAX_BARBEROS];
+			for (int i=0; i<MAX_BARBEROS;i++){
+				Barbero b=new Barbero(gc, "Barbero "+i);
+				Thread hilo=new Thread(b);
+				vhBarberos[i]=hilo;
+				hilo.start();
+			}
+		
+			/* Generamos unos cuantos clientes
+			 * a intervalos aleatorios
+			 */
+			Random generador=new Random();
+			for (int i=0; i<MAX_CLIENTES; i++){
+				Cliente c			=new Cliente(gc);
+				Thread hiloCliente	=new Thread(c);
+				hiloCliente.start();
+			
+				int msegs=generador.nextInt(3)*1000;
+				try {
+					Thread.sleep(msegs);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} /* Fin del for*/    
+		}
+	}
+
+Críticas a la solución anterior
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+¿Cual es el problema?
+
+El problema está en que la forma que tiene el gestor de concurrencia de decirle a un barbero qué silla tiene un cliente sin afeitar es incorrecta: como siempre se empieza a buscar por el principio del vector, los clientes sentados al final **nunca son atendidos**. Hay que corregir esa asignación para *evitar que los procesos sufrán de inanición*.
+
+Método corregido
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: java
+
+	public synchronized int atenderAlgunCliente(){
+		for (int pasos=0; 
+				pasos<clienteEstaAtendido.length; 
+				pasos++)
+		{
+			if (
+					clienteEstaAtendido
+					[numUltimaSillaExaminada]
+							== false
+							)
+			{
+				/*Atendemos a ese cliente*/
+				clienteEstaAtendido
+					[numUltimaSillaExaminada]=true;
+				System.out.println(
+						"Afeitando cliente en silla "+
+								numUltimaSillaExaminada);
+				return numUltimaSillaExaminada;
+			} else {
+				numUltimaSillaExaminada=
+						(numUltimaSillaExaminada+1)%
+						clienteEstaAtendido.length;
+			} //Fin del else
+		} //Fin del for		
+		/* Si llegamos aquí hemos dado toda
+		 * una vuelta al vector y no había nadie sin
+		 * atender devolver -1
+		 */
+		return -1;
+	} //Fin del método
+		
+
+Problema: productores y consumidores.
+------------------------------------------------------
+
+En un cierto programa se tienen procesos que producen números y procesos que leen esos números. Todos los números se introducen en una cola (o vector) limitada.
+
+Todo el mundo lee y escribe de/en esa cola. Cuando un productor quiere poner un número tendrá que comprobar si la cola está llena. Si está llena, espera un tiempo al azar. Si no está llena pone su número en la última posición libre.
+
+Cuando un lector quiere leer, examina si la cola está vacía. Si lo está espera un tiempo al azar, y sino coge el número que haya al principio de la cola y ese número *ya no está disponible para el siguiente*. 
+
+Crear un programa que simule el comportamiento de estos procesos evitando problemas de entrelazado e inanición.
+
+Solución
+------------------------------------------------------
+
+
+Una cola limitada en tamaño
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: java
+
+	public class ColaLimitada {
+		int[] cola;
+		int posParaEncolar;
+		public ColaLimitada(int numElementos){
+			cola=new int[numElementos];
+			posParaEncolar=0;
+		}
+		public void ponerEnCola(int numero){
+			if (posParaEncolar==cola.length){
+				System.out.println(
+						"Cola llena, debe Vd. esperar");
+				//Cola llena.
+				return ;
+			}
+			//Aún queda sitio
+			cola[posParaEncolar]=numero;
+			posParaEncolar++;
+		}
+		public int sacarPrimero(){
+			if (posParaEncolar==0){
+				System.out.println(
+						"Warning:cola vacía, devolviendo 0"
+				);
+				return 0;
+			}
+			int elementoInicial=cola[0];
+			/*Movemos los elementos hacia delante*/
+			for (int pos=1; pos<cola.length; pos++){
+				cola[pos-1]=cola[pos];
+			}
+			/* Ahora la posParaEncolar ha disminuido*/
+			posParaEncolar--;
+			return elementoInicial;
+		}
+		public String toString(){
+			String cadenaCola="";
+			for (int pos=0; pos<posParaEncolar; pos++){
+				cadenaCola+=cola[pos]+"-";
+			}
+			cadenaCola+="FIN";
+			return cadenaCola;
+		}
+	}
+
+
+Un gestor de concurrencia para la cola
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: java
+
+	public class GestorColasConcurrentes {
+		private ColaLimitada colaProtegida;
+		public GestorColasConcurrentes(int numElementos){
+			colaProtegida=new ColaLimitada(numElementos);
+		}
+		public synchronized 
+			void ponerEnCola(int elemento){
+			colaProtegida.ponerEnCola(elemento);
+		}
+		public synchronized int sacarDeCola(){
+			return colaProtegida.sacarPrimero();
+		}		
+	}
+	
+La clase Productor
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: java
+
+	public class Productor implements Runnable{
+		private	Random 							generadorAzar;
+		private 	GestorColasConcurrentes 	gc;
+		public Productor(GestorColasConcurrentes gc){
+			this.gc=gc;
+			this.generadorAzar=new Random();
+		}
+		public void run(){
+			while (true){
+				int numero=generadorAzar.nextInt(20);
+				gc.ponerEnCola(numero);
+				int milisegs=generadorAzar.nextInt(2);
+				try {
+					Thread.currentThread().sleep(milisegs*1000);
+				} catch (InterruptedException e) {
+					System.out.println(
+							"Productor interrumpido"
+					);
+					return;
+				}
+			}
+		}
+	}
+		
+La clase consumidor
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: java
+
+	public class Consumidor implements Runnable {
+		private Random							generadorAzar;
+		private GestorColasConcurrentes 	gc;
+		
+		public Consumidor(GestorColasConcurrentes gc){
+			this.gc=gc;
+			this.generadorAzar=new Random();
+		}
+		public void run(){
+			while (true){
+				int num=gc.sacarDeCola();
+				int milisegs=generadorAzar.nextInt(2);
+				try {
+					Thread.currentThread().sleep(milisegs*1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					System.out.println(
+							"Consumidor interrumpido");
+					return ;
+				}
+			}
+		}
+	}
+		
+Un lanzador
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: java
+
+	public class Lanzador {
+		public void test(){
+			ColaLimitada c=new ColaLimitada(5);
+			if (c.sacarPrimero()!=0){
+				System.out.println(
+				  "Error, no se comprueba el caso cola vacía"
+				);
+			}
+			c.ponerEnCola(10);
+			c.ponerEnCola(20);
+			String cadenaCola=c.toString();
+			if (!cadenaCola.equals("10-20-FIN")){
+				System.out.println("Fallos al encolar");
+			}
+		}
+		public static void main(String[] argumentos){
+			Lanzador l=new Lanzador();
+			GestorColasConcurrentes gcl=
+					new GestorColasConcurrentes(10);
+			
+			int NUM_PRODUCTORES=5;
+			Productor[] 	productores;
+			Thread[]			hilosProductores;
+			
+			productores		= 
+					new Productor[NUM_PRODUCTORES];
+			hilosProductores	= 
+					new Thread[NUM_PRODUCTORES];
+			
+			for (int i=0; i<NUM_PRODUCTORES; i++){
+				productores[i]=new Productor(gcl);
+				hilosProductores[i]=new Thread(
+						productores[i]);
+				hilosProductores[i].start();
+			}
+			
+			int NUM_CONSUMIDORES=10;
+			Consumidor[]	consumidores;
+			Thread[]			hilosConsumidores;
+			
+			consumidores			= 
+					new Consumidor[NUM_CONSUMIDORES];
+			hilosConsumidores	= 
+					new Thread[NUM_CONSUMIDORES];
+			
+			
+			for (int i=0; i<NUM_CONSUMIDORES; i++){
+				consumidores[i]=new Consumidor(gcl);
+				hilosConsumidores[i]=
+						new Thread(consumidores[i]);
+				hilosConsumidores[i].start();
+			}
+			
+			/* Se debería esperar a que todos terminen*/
+			for (int i=0; i<NUM_PRODUCTORES; i++){
+				try {
+					hilosProductores[i].join();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			for (int i=0; i<NUM_CONSUMIDORES; i++){
+				try {
+					hilosConsumidores[i].join();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}	
+	}
+	
+Ejercicio
+------------------------------------------------------
+
+En unos grandes almacenes hay 300 clientes agolpados en la puerta para intentar conseguir un producto del cual solo hay 100 unidades.
+
+Por la puerta solo cabe una persona, pero la paciencia de los clientes es limitada por lo que solo se harán un máximo de 10 intentos para entrar por la puerta. Si despues de 10 intentos la puerta no se ha encontrado libre ni una sola vez, el cliente desiste y se marcha.
+
+
+Cuando se consigue entrar por la puerta el cliente puede encontrarse con dos situaciones:
+
+1. Quedan productos: el cliente cogerá uno y se marchará.
+2. No quedan productos: el cliente simplemente se marchará.
+
+Realizar la simulación en Java de dicha situación.
+	
+		
+Documentación.
+--------------------------------------------------------------------------
+
+La estructura general de toda aplicación multihilo es algo similar a lo siguiente:
+
+
+* Habrá tareas que se puedan paralelizar. Dichas tareas heredarán de ``Runnable``.
+
+* Habrá procesos que pueden ser accedidos por muchos hilos. Estos objetos **deberán usar synchronized**
+
+* Habrá que crear los recursos compartidos y crear los hilos. Esta operación se debe hacer en este orden.
+
+
+
+Depuración.
+--------------------------------------------------------------------------
